@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service ListService {
+  rpc friendList (FriendGroupListRequest) returns (FriendListResponse) {}
+  rpc groupList (FriendGroupListRequest) returns (GroupListResponse) {}
+  rpc memberList (MemberListRequest) returns (MemberListResponse) {}
+}
+
+message FriendGroupListRequest {
+  SessionKey sessionKey = 1;
+}
+
+message FriendListResponse {
+  ErrorMessage code = 1;
+  repeated FriendInfo data = 2;
+}
+
+message GroupListResponse {
+  ErrorMessage code = 1;
+  repeated GroupInfo data = 2;
+}
+
+message MemberListRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+}
+
+message MemberListResponse {
+  ErrorMessage code = 1;
+  repeated GroupMemberInfo data = 2;
+}

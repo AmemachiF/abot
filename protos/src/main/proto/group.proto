@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package com.amemachif.abot.proto;
+
+message GroupConfig {
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue announcement = 2;
+  google.protobuf.BoolValue confessTalk = 3;
+  google.protobuf.BoolValue allowMemberInvite = 4;
+  google.protobuf.BoolValue autoApprove = 5;
+  google.protobuf.BoolValue anonymousChat = 6;
+}
+
+message GroupMemberSimpleInfo {
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue specialTitle = 2;
+}
+
+message GroupInfo {
+  int64 id = 1;
+  string name = 2;
+  GroupPermission permission = 3;
+}
+
+message GroupMemberInfo {
+  int64 id = 1;
+  string memberName = 2;
+  GroupPermission permission = 3;
+  GroupInfo group = 4;
+}
+
+enum GroupPermission {
+  MEMBER = 0;
+  ADMINISTRATOR = 1;
+  OWNER = 2;
+}

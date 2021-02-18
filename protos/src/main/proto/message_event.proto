@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "user_info.proto";
+import "group.proto";
+
+package com.amemachif.abot.proto;
+
+message MessageEventInfo {
+  string type = 1;
+  MessageEvent message = 2;
+}
+
+message MessageEvent {
+  oneof message_content {
+    FriendMessageContent friendMessage = 2;
+    GroupMessageContent groupMessage = 3;
+    TempMessageContent tempMessage = 4;
+  }
+}
+
+message GroupMessageContent {
+  reserved "messageChain";
+  GroupMemberInfo sender = 2;
+}
+
+message FriendMessageContent {
+  reserved "messageChain";
+  FriendInfo sender = 2;
+}
+
+message TempMessageContent {
+  reserved "messageChain";
+  FriendInfo sender = 2;
+}

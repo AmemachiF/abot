@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import public "error.proto";
+import public "session.proto";
+import public "user_info.proto";
+import public "group.proto";
+import public "message_event.proto";
+import public "google/protobuf/empty.proto";
+import public "google/protobuf/wrappers.proto";
+import public "google/protobuf/any.proto";
+
+package com.amemachif.abot.proto;
+
+message CommonResponse {
+  ErrorMessage code = 1;
+}

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service BotRootService {
+  rpc about (google.protobuf.Empty) returns (AboutResponse) {}
+  rpc auth (AuthRequest) returns (AuthResponse) {}
+  rpc verify (VerifyReleaseRequest) returns (CommonResponse) {}
+  rpc release (VerifyReleaseRequest) returns (CommonResponse) {}
+}
+
+message AboutResponse {
+  ErrorMessage code = 1;
+  message Data {
+    string version = 1;
+  }
+  Data data = 2;
+}
+
+message AuthRequest {
+  string authKey = 1;
+}
+
+message AuthResponse {
+  ErrorMessage code = 1;
+  string session = 2;
+}
+
+message VerifyReleaseRequest {
+  SessionKey sessionKey = 1;
+  int64 qq = 2;
+}

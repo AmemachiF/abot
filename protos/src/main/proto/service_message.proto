@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service MessageService {
+  rpc sendFriendMessage (SendFriendMessageRequest) returns (SendMessageResponse) {}
+  rpc sendTempMessage (SendTempMessageRequest) returns (SendMessageResponse) {}
+  rpc sendGroupMessage (SendGroupMessageRequest) returns (SendMessageResponse) {}
+  rpc recall (RecallRequest) returns (CommonResponse) {}
+  rpc sendImageMessage (SendImageMessageRequest) returns (SendImageMessageResponse) {}
+  rpc fetchMessage (FetchMessageRequest) returns (FetchMessageResponse) {}
+  rpc messageFromId (MessageFromIdRequest) returns (MessageFromIdResponse) {}
+  rpc countMessage (CountMessageRequest) returns (CountMessageResponse) {}
+  rpc messageStream (MessageEventStreamRequest) returns (stream MessageEventStreamResponse) {}
+  rpc eventStream (MessageEventStreamRequest) returns (stream MessageEventStreamResponse) {}
+  rpc allStream (MessageEventStreamRequest) returns (stream MessageEventStreamResponse) {}
+}
+
+message SendFriendMessageRequest {
+  SessionKey sessionKey = 1;
+  oneof target_qq {
+    int64 target = 2;
+    int64 qq = 3;
+  }
+  google.protobuf.Int32Value quote = 4;
+  reserved "messageChain";
+}
+
+message SendTempMessageRequest {
+  SessionKey sessionKey = 1;
+  int64 qq = 2;
+  int64 group = 3;
+  google.protobuf.Int32Value quote = 4;
+  reserved "messageChain";
+}
+
+message SendGroupMessageRequest {
+  SessionKey sessionKey = 1;
+  oneof target_group {
+    int64 target = 2;
+    int64 group = 3;
+  }
+  google.protobuf.Int32Value quote = 4;
+  reserved "messageChain";
+}
+
+message SendMessageResponse {
+  ErrorMessage code = 1;
+  int32 messageId = 2;
+}
+
+message RecallRequest {
+  SessionKey sessionKey = 1;
+  int32 target = 2;
+}
+
+message SendImageMessageRequest {
+  SessionKey sessionKey = 1;
+  oneof target_qq_group {
+    int64 target = 2;
+    int64 qq = 3;
+    int64 group = 4;
+  }
+  repeated string urls = 5;
+}
+
+message SendImageMessageResponse {
+  ErrorMessage code = 1;
+  repeated string imageId = 2;
+}
+
+message FetchMessageRequest {
+  SessionKey sessionKey = 1;
+  uint32 count = 2;
+  bool latest = 3;
+  bool peek = 4;
+}
+
+message FetchMessageResponse {
+  ErrorMessage code = 1;
+  repeated MessageEventInfo data = 2;
+}
+
+message MessageFromIdRequest {
+  SessionKey sessionKey = 1;
+  int32 id = 2;
+}
+
+message MessageFromIdResponse {
+  ErrorMessage code = 1;
+  MessageEventInfo data = 2;
+}
+
+message CountMessageRequest {
+  SessionKey sessionKey = 1;
+}
+
+message CountMessageResponse {
+  ErrorMessage code = 1;
+  uint32 data = 2;
+}
+
+message MessageEventStreamRequest {
+  SessionKey sessionKey = 1;
+}
+
+message MessageEventStreamResponse {
+  ErrorMessage code = 1;
+  MessageEventInfo data = 2;
+}

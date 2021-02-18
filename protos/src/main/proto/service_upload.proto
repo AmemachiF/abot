@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service UploadService {
+  rpc uploadImage (UploadImageRequest) returns (UploadImageResponse) {}
+  rpc uploadVoice (UploadVoiceRequest) returns (UploadVoiceResponse) {}
+}
+
+message UploadImageRequest {
+  SessionKey sessionKey = 1;
+  Type type = 2;
+  bytes image = 3;
+}
+
+message UploadImageResponse {
+  ErrorMessage code = 1;
+  string imageId = 2;
+  string url = 3;
+  string path = 4;
+}
+
+message UploadVoiceRequest {
+  SessionKey sessionKey = 1;
+  Type type = 2;
+  bytes voice = 3;
+}
+
+message UploadVoiceResponse {
+  ErrorMessage code = 1;
+  string voiceId = 2;
+  string url = 3;
+  string path = 4;
+}
+
+enum Type {
+  FRIEND = 0;
+  GROUP = 1;
+  TEMP = 2;
+}

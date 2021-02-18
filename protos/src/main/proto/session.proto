@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package com.amemachif.abot.proto;
+
+message SessionKey {
+  string sessionKey = 1;
+}

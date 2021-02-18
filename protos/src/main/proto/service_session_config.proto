@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service SessionConfig {
+  rpc getConfig (GetConfigRequest) returns (GetConfigResponse) {}
+  rpc setConfig (SetConfigRequest) returns (CommonResponse) {}
+}
+
+message Config {
+  int32 cacheSize = 1;
+  bool enableStream = 2;
+}
+
+message GetConfigRequest {
+  SessionKey sessionKey = 1;
+}
+
+message GetConfigResponse {
+  ErrorMessage code = 1;
+  Config config = 2;
+}
+
+message SetConfigRequest {
+  SessionKey sessionKey = 1;
+  Config config = 2;
+}

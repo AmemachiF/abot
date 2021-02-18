@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package com.amemachif.abot.proto;
+
+enum Code {
+  OK = 0;
+  WRONG_AUTH_KEY = 1;
+  BOT_NOT_FOUND = 2;
+  SESSION_INVALID = 3;
+  SESSION_NOT_AUTH = 4;
+  TARGET_NOT_FOUND = 5;
+  FILE_NOT_FOUND = 6;
+  NO_PERMISSION = 10;
+  BOT_MUTED = 20;
+  MESSAGE_TOO_LONG = 30;
+  ERROR = 400;
+}
+
+message ErrorMessage {
+  Code code = 1;
+  int32 num = 2;
+  string message = 3;
+}

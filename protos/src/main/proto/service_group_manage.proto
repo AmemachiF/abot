@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+import "common.proto";
+import "group.proto";
+
+package com.amemachif.abot.proto;
+
+service GroupManageService {
+  rpc mute (MuteRequest) returns (CommonResponse) {}
+  rpc unmute (UnmuteRequest) returns (CommonResponse) {}
+  rpc kick (KickRequest) returns (CommonResponse) {}
+  rpc quit (QuitRequest) returns (CommonResponse) {}
+  rpc muteAll (MuteUnmuteAllRequest) returns (CommonResponse) {}
+  rpc unmuteAll (MuteUnmuteAllRequest) returns (CommonResponse) {}
+  rpc getGroupConfig (GetGroupConfigRequest) returns (GetGroupConfigResponse) {}
+  rpc setGroupConfig (SetGroupConfigRequest) returns (CommonResponse) {}
+  rpc getMemberInfo (GetMemberInfoRequest) returns (GetMemberInfoResponse) {}
+  rpc setMemberInfo (SetMemberInfoRequest) returns (CommonResponse) {}
+}
+
+message MuteRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+  int64 memberId = 3;
+  int32 time = 4;
+}
+
+message UnmuteRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+  int64 memberId = 3;
+}
+
+message KickRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+  int64 memberId = 3;
+  google.protobuf.StringValue msg = 4;
+}
+
+message QuitRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+}
+
+message MuteUnmuteAllRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+}
+
+message GetGroupConfigRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+}
+
+message GetGroupConfigResponse {
+  ErrorMessage code = 1;
+  GroupConfig data = 2;
+}
+
+message SetGroupConfigRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+  GroupConfig config = 3;
+}
+
+message GetMemberInfoRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+  int64 memberId = 3;
+}
+
+message GetMemberInfoResponse {
+  ErrorMessage code = 1;
+  GroupMemberSimpleInfo data = 2;
+}
+
+message SetMemberInfoRequest {
+  SessionKey sessionKey = 1;
+  int64 target = 2;
+  int64 memberId = 3;
+  GroupMemberSimpleInfo info = 4;
+}

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service BotManageService {
+  rpc newBot (NewBotRequest) returns (CommonResponse) {}
+  rpc botStatus (BotStatusRequest) returns (BotStatusResponse) {}
+  rpc botList (BotListRequest) returns (BotListResponse) {}
+}
+
+message NewBotRequest {
+    string manageKey = 1;
+    int64 qq = 2;
+    oneof password {
+      string passwordPlain = 3;
+      bytes passwordMd5 = 4;
+    }
+    bool autoLogin = 5;
+    BotConfig config = 6;
+}
+
+message BotStatusRequest {
+  string manageKey = 1;
+  int64 qq = 2;
+}
+
+message BotStatusResponse {
+  ErrorMessage code = 1;
+  BotStatus status = 2;
+}
+
+message BotStatus {
+  int64 qq = 1;
+  bool isOnline = 2;
+}
+
+message BotConfig {
+  google.protobuf.StringValue deviceInfo = 1;
+}
+
+message BotListRequest {
+  string manageKey = 1;
+}
+
+message BotListResponse {
+  ErrorMessage code = 1;
+  repeated BotInfo bots = 2;
+}
+
+message BotInfo {
+  int64 qq = 1;
+  string nickname = 2;
+}
