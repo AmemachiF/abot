@@ -3,8 +3,8 @@ package com.amemachif.abot.server.services
 import com.amemachif.abot.proto.BotRootServiceGrpcKt
 import com.amemachif.abot.proto.Common
 import com.amemachif.abot.proto.ServiceBotRoot
-import com.amemachif.abot.server.BotExtensions.botCatching
 import com.amemachif.abot.server.SessionManager
+import com.amemachif.abot.server.botCatching
 import com.google.protobuf.Empty
 import java.util.*
 

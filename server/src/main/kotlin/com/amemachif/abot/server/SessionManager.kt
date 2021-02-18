@@ -2,12 +2,13 @@ package com.amemachif.abot.server
 
 import com.amemachif.abot.server.exceptions.BotNotFoundException
 import com.amemachif.abot.server.exceptions.SessionInvalidException
+import com.amemachif.abot.server.exceptions.SessionNotAuthException
 import com.amemachif.abot.server.exceptions.WrongAuthKeyException
-import kotlin.collections.LinkedHashMap
-import kotlin.concurrent.schedule
 import net.mamoe.mirai.Bot
 import org.apache.commons.lang3.RandomStringUtils
 import java.util.*
+import kotlin.collections.LinkedHashMap
+import kotlin.concurrent.schedule
 
 class SessionManager private constructor() {
     private val sessions = LinkedHashMap<String, Session>()
@@ -16,7 +17,7 @@ class SessionManager private constructor() {
         val curr = System.currentTimeMillis()
         sessions.forEach {
             val bind = it.value.bind
-            if (bind != null && curr - bind.accessTime > 10 * 1000) {
+            if (bind != null && curr - bind.accessTime > 30 * 60 * 1000) {
                 unbind(it.key)
             }
         }
@@ -37,19 +38,17 @@ class SessionManager private constructor() {
 
     fun bind(sessionKey: String, qq: Long) {
         val session = sessions[sessionKey] ?: throw SessionInvalidException()
-        session.bind = Session.Bind(qq).apply {
-            bind()
-        }
+        session.setBind(Session.Bind(qq))
+    }
+
+    fun findSession(sessionKey: String): Session? {
+        return sessions[sessionKey]
     }
 
     fun unbind(sessionKey: String) {
         val session = sessions[sessionKey] ?: throw SessionInvalidException()
         session.bind?.unbind()
-        session.bind = null
-    }
-
-    companion object {
-        val INSTANCE = SessionManager()
+        session.unsetBind()
     }
 
     class Session(
@@ -57,19 +56,53 @@ class SessionManager private constructor() {
         val createTime: Long = System.currentTimeMillis()
     ) {
         var bind: Bind? = null
+            private set
+
+        val isBind
+            get() = checkBindValid()
+
+        fun setBind(bind: Bind) {
+            synchronized(this) {
+                this.bind = bind.apply {
+                    bind()
+                }
+            }
+        }
+
+        fun unsetBind() {
+            synchronized(this) {
+                bind?.unbind()
+                bind = null
+            }
+        }
+
+        fun ensuredBind(): Bind = bind?.apply {
+            onAccess()
+        } ?: throw SessionNotAuthException()
+
+        private fun checkBindValid(): Boolean {
+            synchronized(this) {
+                val bind = bind ?: return false
+                val bot = Bot.findInstance(bind.qq)
+                if (bot == null) {
+                    bind.unbind()
+                    this.bind = null
+                    return false
+                }
+
+                return true
+            }
+        }
 
         class Bind(
             val qq: Long
         ) {
-            var bot: Bot
-                private set
-
             val bindTime = System.currentTimeMillis()
             var accessTime = System.currentTimeMillis()
                 private set
 
-            init {
-                bot = Bot.getInstanceOrNull(qq) ?: throw BotNotFoundException()
+            val bot: Bot get() {
+                return Bot.getInstanceOrNull(qq) ?: throw BotNotFoundException()
             }
 
             fun bind() {
@@ -78,9 +111,27 @@ class SessionManager private constructor() {
             fun unbind() {
             }
 
-            private fun onAccess() {
+            fun onAccess() {
                 accessTime = System.currentTimeMillis()
             }
         }
     }
+
+    companion object {
+        val INSTANCE = SessionManager()
+
+        fun checkSession(sessionKey: String, bindNeeded: Boolean = true): Session {
+            val session = INSTANCE.findSession(sessionKey) ?: throw SessionInvalidException()
+            if (bindNeeded && !session.isBind) throw SessionNotAuthException()
+            return session
+        }
+
+        fun checkSession(
+            sessionKey: com.amemachif.abot.proto.Session.SessionKey,
+            bindNeeded: Boolean = true
+        ): Session {
+            return checkSession(sessionKey.sessionKey, bindNeeded)
+        }
+    }
 }
+

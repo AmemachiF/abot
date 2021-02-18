@@ -5,6 +5,7 @@ import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
 import java.io.FileInputStream
+import java.util.*
 
 class ConfigManager private constructor() {
     val config: Config
@@ -43,6 +44,18 @@ class ConfigManager private constructor() {
             var port: Int = 50000
             var authKey: String = RandomStringUtils.randomAlphanumeric(20, 30)
             var manageKey: String = RandomStringUtils.randomAlphanumeric(30, 40)
+            var botLogin: Array<BotLogin> = arrayOf()
+
+            class BotLogin {
+                var qq: Long? = null
+                var passwordType: PasswordType = PasswordType.PLAIN
+                var password: String? = null
+                var autoLogin: Boolean = true
+
+                enum class PasswordType {
+                    PLAIN, MD5
+                }
+            }
         }
     }
 }

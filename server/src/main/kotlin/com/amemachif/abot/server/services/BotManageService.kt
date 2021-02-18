@@ -3,8 +3,10 @@ package com.amemachif.abot.server.services
 import com.amemachif.abot.proto.BotManageServiceGrpcKt
 import com.amemachif.abot.proto.Common
 import com.amemachif.abot.proto.ServiceBotManage
-import com.amemachif.abot.server.BotExtensions.botCatching
+import com.amemachif.abot.server.ConfigManager
+import com.amemachif.abot.server.botCatching
 import com.amemachif.abot.server.exceptions.BotNotFoundException
+import com.amemachif.abot.server.exceptions.WrongAuthKeyException
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.utils.BotConfiguration
@@ -12,6 +14,7 @@ import net.mamoe.mirai.utils.BotConfiguration
 class BotManageService : BotManageServiceGrpcKt.BotManageServiceCoroutineImplBase() {
     override suspend fun newBot(request: ServiceBotManage.NewBotRequest): Common.CommonResponse {
         return botCatching {
+            checkManageKey(request.manageKey)
             if (Bot.findInstance(request.qq) != null) {
                 Common.CommonResponse.newBuilder()
             } else {
@@ -41,6 +44,7 @@ class BotManageService : BotManageServiceGrpcKt.BotManageServiceCoroutineImplBas
 
     override suspend fun botStatus(request: ServiceBotManage.BotStatusRequest): ServiceBotManage.BotStatusResponse {
         return botCatching {
+            checkManageKey(request.manageKey)
             val bot = Bot.getInstanceOrNull(request.qq) ?: throw BotNotFoundException()
             ServiceBotManage.BotStatusResponse.newBuilder()
                 .apply {
@@ -53,6 +57,44 @@ class BotManageService : BotManageServiceGrpcKt.BotManageServiceCoroutineImplBas
                         }
                     }
                 }
+        }
+    }
+
+    override suspend fun botList(request: ServiceBotManage.BotListRequest): ServiceBotManage.BotListResponse {
+        return botCatching {
+            checkManageKey(request.manageKey)
+            ServiceBotManage.BotListResponse.newBuilder()
+                .apply {
+                    Bot.instances.forEach {
+                        addBotsBuilder().apply {
+                            qq = it.id
+                            try {
+                                nicknameBuilder.value = it.nick
+                            } catch (e: UninitializedPropertyAccessException) {
+                            }
+
+                        }
+                    }
+                }
+        }
+    }
+
+    override suspend fun login(request: ServiceBotManage.LoginRequest): Common.CommonResponse {
+        return botCatching {
+            checkManageKey(request.manageKey)
+
+            val bot = Bot.getInstanceOrNull(request.qq) ?: throw BotNotFoundException()
+            bot.login()
+
+            Common.CommonResponse.newBuilder()
+        }
+    }
+
+    companion object {
+        private fun checkManageKey(manageKey: String) {
+            if (manageKey != ConfigManager.INSTANCE.config.manageKey) {
+                throw WrongAuthKeyException()
+            }
         }
     }
 }
