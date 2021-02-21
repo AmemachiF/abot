@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service EventResponseService {
+  rpc newFriendRequestEvent(NewFriendRequestEventRequest) returns (CommonEmptyResponse) {}
+  rpc memberJoinRequestEvent(MemberJoinRequestEventRequest) returns (CommonEmptyResponse) {}
+  rpc botInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEventRequest) returns (CommonEmptyResponse) {}
+}
+
+message NewFriendRequestEventRequest {
+  SessionKey sessionKey = 1;
+  int64 eventId = 2;
+  int64 fromId = 3;
+  int64 groupId = 4;
+  Operate operate = 5;
+  string message = 6;
+  enum Operate {
+    ACCEPT = 0;
+    REJECT = 1;
+    REJECT_BLOCK = 2;
+  }
+}
+
+message MemberJoinRequestEventRequest {
+  SessionKey sessionKey = 1;
+  int64 eventId = 2;
+  int64 fromId = 3;
+  int64 groupId = 4;
+  Operate operate = 5;
+  string message = 6;
+  enum Operate {
+    ACCEPT = 0;
+    REJECT = 1;
+    IGNORE = 2;
+    REJECT_BLOCK = 3;
+    IGNORE_BLOCK = 4;
+  }
+}
+
+message BotInvitedJoinGroupRequestEventRequest {
+  SessionKey sessionKey = 1;
+  int64 eventId = 2;
+  int64 fromId = 3;
+  int64 groupId = 4;
+  Operate operate = 5;
+  string message = 6;
+  enum Operate {
+    ACCEPT = 0;
+    REJECT = 1;
+  }
+}

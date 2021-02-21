@@ -3,6 +3,7 @@ package com.amemachif.abot.server.services
 import com.amemachif.abot.proto.BotManageServiceGrpcKt
 import com.amemachif.abot.proto.Common
 import com.amemachif.abot.proto.ServiceBotManage
+import com.amemachif.abot.proto.ServiceBotManage.NewBotRequest.PasswordCase.*
 import com.amemachif.abot.server.ConfigManager
 import com.amemachif.abot.server.botCatching
 import com.amemachif.abot.server.exceptions.BotNotFoundException
@@ -12,11 +13,11 @@ import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.utils.BotConfiguration
 
 class BotManageService : BotManageServiceGrpcKt.BotManageServiceCoroutineImplBase() {
-    override suspend fun newBot(request: ServiceBotManage.NewBotRequest): Common.CommonResponse {
+    override suspend fun newBot(request: ServiceBotManage.NewBotRequest): Common.CommonEmptyResponse {
         return botCatching {
             checkManageKey(request.manageKey)
             if (Bot.findInstance(request.qq) != null) {
-                Common.CommonResponse.newBuilder()
+                Common.CommonEmptyResponse.newBuilder()
             } else {
                 val config = BotConfiguration {
                     if (request.hasConfig()) {
@@ -25,19 +26,20 @@ class BotManageService : BotManageServiceGrpcKt.BotManageServiceCoroutineImplBas
                         fileBasedDeviceInfo()
                     }
                 }
-                val bot = when (request.passwordCase.number) {
-                    ServiceBotManage.NewBotRequest.PASSWORDPLAIN_FIELD_NUMBER -> {
+                val bot = when (request.passwordCase) {
+                    PASSWORDPLAIN -> {
                         BotFactory.newBot(request.qq, request.passwordPlain, config)
                     }
-                    ServiceBotManage.NewBotRequest.PASSWORDMD5_FIELD_NUMBER -> {
+                    PASSWORDMD5 -> {
                         BotFactory.newBot(request.qq, request.passwordMd5.toByteArray(), config)
                     }
+                    PASSWORD_NOT_SET -> throw NoSuchMethodException()
                     else -> throw NoSuchMethodException()
                 }
                 if (request.autoLogin) {
                     bot.login()
                 }
-                Common.CommonResponse.newBuilder()
+                Common.CommonEmptyResponse.newBuilder()
             }
         }
     }
@@ -69,7 +71,7 @@ class BotManageService : BotManageServiceGrpcKt.BotManageServiceCoroutineImplBas
                         addBotsBuilder().apply {
                             qq = it.id
                             try {
-                                nicknameBuilder.value = it.nick
+                                nickname = it.nick
                             } catch (e: UninitializedPropertyAccessException) {
                             }
 
@@ -79,14 +81,14 @@ class BotManageService : BotManageServiceGrpcKt.BotManageServiceCoroutineImplBas
         }
     }
 
-    override suspend fun login(request: ServiceBotManage.LoginRequest): Common.CommonResponse {
+    override suspend fun login(request: ServiceBotManage.LoginRequest): Common.CommonEmptyResponse {
         return botCatching {
             checkManageKey(request.manageKey)
 
             val bot = Bot.getInstanceOrNull(request.qq) ?: throw BotNotFoundException()
             bot.login()
 
-            Common.CommonResponse.newBuilder()
+            Common.CommonEmptyResponse.newBuilder()
         }
     }
 

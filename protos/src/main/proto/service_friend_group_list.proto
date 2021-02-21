@@ -5,12 +5,16 @@ import "common.proto";
 package com.amemachif.abot.proto;
 
 service ListService {
-  rpc friendList (FriendGroupListRequest) returns (FriendListResponse) {}
-  rpc groupList (FriendGroupListRequest) returns (GroupListResponse) {}
+  rpc friendList (FriendListRequest) returns (FriendListResponse) {}
+  rpc groupList (GroupListRequest) returns (GroupListResponse) {}
   rpc memberList (MemberListRequest) returns (MemberListResponse) {}
 }
 
-message FriendGroupListRequest {
+message FriendListRequest {
+  SessionKey sessionKey = 1;
+}
+
+message GroupListRequest {
   SessionKey sessionKey = 1;
 }
 
@@ -31,5 +35,5 @@ message MemberListRequest {
 
 message MemberListResponse {
   ErrorMessage code = 1;
-  repeated GroupMemberInfo data = 2;
+  repeated GroupMemberDetails data = 2;
 }

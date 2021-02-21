@@ -7,16 +7,16 @@ package com.amemachif.abot.proto;
 service BotRootService {
   rpc about (google.protobuf.Empty) returns (AboutResponse) {}
   rpc auth (AuthRequest) returns (AuthResponse) {}
-  rpc verify (VerifyReleaseRequest) returns (CommonResponse) {}
-  rpc release (VerifyReleaseRequest) returns (CommonResponse) {}
+  rpc verify (VerifyReleaseRequest) returns (CommonEmptyResponse) {}
+  rpc release (VerifyReleaseRequest) returns (CommonEmptyResponse) {}
 }
 
 message AboutResponse {
   ErrorMessage code = 1;
+  Data data = 2;
   message Data {
     string version = 1;
   }
-  Data data = 2;
 }
 
 message AuthRequest {

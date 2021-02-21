@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service ReceiveMessageService {
+  rpc recall (RecallRequest) returns (CommonEmptyResponse) {}
+  rpc fetchMessage (FetchMessageRequest) returns (FetchMessageResponse) {}
+  rpc messageFromId (MessageFromIdRequest) returns (MessageFromIdResponse) {}
+  rpc countMessage (CountMessageRequest) returns (CountMessageResponse) {}
+  rpc messageStream (MessageEventStreamRequest) returns (stream MessageEventStreamResponse) {}
+  rpc eventStream (MessageEventStreamRequest) returns (stream MessageEventStreamResponse) {}
+  rpc allStream (MessageEventStreamRequest) returns (stream MessageEventStreamResponse) {}
+  rpc filterStream (MessageEventFilterStreamRequest) returns (stream MessageEventStreamResponse) {}
+}
+
+message RecallRequest {
+  SessionKey sessionKey = 1;
+  int32 target = 2;
+}
+
+message FetchMessageRequest {
+  SessionKey sessionKey = 1;
+  uint32 count = 2;
+  bool latest = 3;
+  bool peek = 4;
+}
+
+message FetchMessageResponse {
+  ErrorMessage code = 1;
+  repeated EventInfo data = 2;
+}
+
+message MessageFromIdRequest {
+  SessionKey sessionKey = 1;
+  int32 id = 2;
+}
+
+message MessageFromIdResponse {
+  ErrorMessage code = 1;
+  MessageEventInfo data = 2;
+}
+
+message CountMessageRequest {
+  SessionKey sessionKey = 1;
+}
+
+message CountMessageResponse {
+  ErrorMessage code = 1;
+  uint32 data = 2;
+}
+
+message MessageEventStreamRequest {
+  SessionKey sessionKey = 1;
+}
+
+message MessageEventFilterStreamRequest {
+  SessionKey sessionKey = 1;
+  repeated EventInfo events = 2;
+}
+
+message MessageEventStreamResponse {
+  ErrorMessage code = 1;
+  EventInfo data = 2;
+}

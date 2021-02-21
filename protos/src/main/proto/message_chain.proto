@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+package com.amemachif.abot.proto;
+
+message MessageChain {
+  repeated MessageChainContent chain = 1;
+}
+
+message MessageChainContent {
+  oneof message {
+    SourceMessage sourceMessage = 1;
+    QuoteMessage quoteMessage = 2;
+    AtMessage atMessage = 3;
+    AtAllMessage atAllMessage = 4;
+    FaceMessage faceMessage = 5;
+    PlainMessage plainMessage = 6;
+    ImageMessage imageMessage = 7;
+    FlashImageMessage flashImageMessage = 8;
+    VoiceMessage voiceMessage = 9;
+    XmlMessage xmlMessage = 10;
+    JsonMessage jsonMessage = 11;
+    AppMessage appMessage = 12;
+    PokeMessage pokeMessage = 13;
+  }
+}
+
+message SourceMessage {
+  int32 id = 1;
+  google.protobuf.Timestamp time = 2;
+}
+
+message QuoteMessage {
+  int32 id = 1;
+  int64 groupId = 2;
+  int64 senderId = 3;
+  int64 targetId = 4;
+  MessageChain origin = 5;
+}
+
+message AtMessage {
+  int64 target = 1;
+  google.protobuf.StringValue display = 2;
+}
+
+message AtAllMessage {
+}
+
+message FaceMessage {
+  google.protobuf.UInt32Value faceId = 1;
+  google.protobuf.StringValue name = 2;
+}
+
+message PlainMessage {
+  string text = 1;
+}
+
+message ImageMessage {
+  google.protobuf.StringValue imageId = 1;
+  google.protobuf.StringValue url = 2;
+  google.protobuf.StringValue path = 3;
+}
+
+message FlashImageMessage {
+  google.protobuf.StringValue imageId = 1;
+  google.protobuf.StringValue url = 2;
+  google.protobuf.StringValue path = 3;
+}
+
+message VoiceMessage {
+  google.protobuf.StringValue voiceId = 1;
+  google.protobuf.StringValue url = 2;
+  google.protobuf.StringValue path = 3;
+}
+
+message XmlMessage {
+  string xml = 1;
+}
+
+message JsonMessage {
+  string json = 1;
+}
+
+message AppMessage {
+  string content = 1;
+}
+
+message PokeMessage {
+  string name = 1;
+}

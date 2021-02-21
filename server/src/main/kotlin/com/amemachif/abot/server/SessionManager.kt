@@ -5,6 +5,8 @@ import com.amemachif.abot.server.exceptions.SessionInvalidException
 import com.amemachif.abot.server.exceptions.SessionNotAuthException
 import com.amemachif.abot.server.exceptions.WrongAuthKeyException
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.event.Listener
+import net.mamoe.mirai.event.events.MessageEvent
 import org.apache.commons.lang3.RandomStringUtils
 import java.util.*
 import kotlin.collections.LinkedHashMap
@@ -97,18 +99,36 @@ class SessionManager private constructor() {
         class Bind(
             val qq: Long
         ) {
+            val messageQueue = MessageQueue()
+            val cacheQueue = CacheQueue()
+
+            var cacheSize
+                get() = cacheQueue.cacheSize
+                set(value) {
+                    cacheQueue.cacheSize = value
+                }
+
+            private lateinit var cacheListener: Listener<MessageEvent>
+
             val bindTime = System.currentTimeMillis()
             var accessTime = System.currentTimeMillis()
                 private set
 
-            val bot: Bot get() {
-                return Bot.getInstanceOrNull(qq) ?: throw BotNotFoundException()
-            }
+            val bot: Bot
+                get() {
+                    return Bot.getInstanceOrNull(qq) ?: throw BotNotFoundException()
+                }
 
             fun bind() {
+                cacheListener = bot.eventChannel.subscribeAlways {
+                    if (this.bot == this@Bind.bot) {
+                        cacheQueue.add(this.source)
+                    }
+                }
             }
 
             fun unbind() {
+                cacheListener.complete()
             }
 
             fun onAccess() {

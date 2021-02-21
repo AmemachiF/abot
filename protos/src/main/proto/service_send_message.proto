@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+import "common.proto";
+
+package com.amemachif.abot.proto;
+
+service SendMessageService {
+  rpc sendFriendMessage (SendFriendMessageRequest) returns (SendMessageResponse) {}
+  rpc sendTempMessage (SendTempMessageRequest) returns (SendMessageResponse) {}
+  rpc sendGroupMessage (SendGroupMessageRequest) returns (SendMessageResponse) {}
+  rpc sendImageMessage (SendImageMessageRequest) returns (SendImageMessageResponse) {}
+}
+
+message SendFriendMessageRequest {
+  SessionKey sessionKey = 1;
+  oneof target_qq {
+    int64 target = 2;
+    int64 qq = 3;
+  }
+  google.protobuf.Int32Value quote = 4;
+  MessageChain messageChain = 5;
+}
+
+message SendTempMessageRequest {
+  SessionKey sessionKey = 1;
+  int64 qq = 2;
+  int64 group = 3;
+  google.protobuf.Int32Value quote = 4;
+  MessageChain messageChain = 5;
+}
+
+message SendGroupMessageRequest {
+  SessionKey sessionKey = 1;
+  oneof target_group {
+    int64 target = 2;
+    int64 group = 3;
+  }
+  google.protobuf.Int32Value quote = 4;
+  MessageChain messageChain = 5;
+}
+
+message SendMessageResponse {
+  ErrorMessage code = 1;
+  int32 messageId = 2;
+}
+
+message SendImageMessageRequest {
+  SessionKey sessionKey = 1;
+  oneof target_qq_group {
+    int64 target = 2;
+    int64 qq = 3;
+    int64 group = 4;
+  }
+  repeated string urls = 5;
+}
+
+message SendImageMessageResponse {
+  ErrorMessage code = 1;
+  repeated string imageId = 2;
+}

@@ -38,17 +38,17 @@ class BotRootService : BotRootServiceGrpcKt.BotRootServiceCoroutineImplBase() {
         }
     }
 
-    override suspend fun verify(request: ServiceBotRoot.VerifyReleaseRequest): Common.CommonResponse {
+    override suspend fun verify(request: ServiceBotRoot.VerifyReleaseRequest): Common.CommonEmptyResponse {
         return botCatching {
             SessionManager.INSTANCE.bind(request.sessionKey.sessionKey, request.qq)
-            Common.CommonResponse.newBuilder()
+            Common.CommonEmptyResponse.newBuilder()
         }
     }
 
-    override suspend fun release(request: ServiceBotRoot.VerifyReleaseRequest): Common.CommonResponse {
+    override suspend fun release(request: ServiceBotRoot.VerifyReleaseRequest): Common.CommonEmptyResponse {
         return botCatching {
             SessionManager.INSTANCE.unbind(request.sessionKey.sessionKey)
-            Common.CommonResponse.newBuilder()
+            Common.CommonEmptyResponse.newBuilder()
         }
     }
 }

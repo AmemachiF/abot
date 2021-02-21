@@ -6,12 +6,11 @@ package com.amemachif.abot.proto;
 
 service SessionConfig {
   rpc getConfig (GetConfigRequest) returns (GetConfigResponse) {}
-  rpc setConfig (SetConfigRequest) returns (CommonResponse) {}
+  rpc setConfig (SetConfigRequest) returns (CommonEmptyResponse) {}
 }
 
 message Config {
-  int32 cacheSize = 1;
-  bool enableStream = 2;
+  google.protobuf.Int32Value cacheSize = 1;
 }
 
 message GetConfigRequest {

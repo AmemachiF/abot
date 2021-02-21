@@ -18,6 +18,6 @@ enum Code {
 
 message ErrorMessage {
   Code code = 1;
-  int32 num = 2;
-  string message = 3;
+  string message = 2;
+  int32 codeNum = 3;
 }

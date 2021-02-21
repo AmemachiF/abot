@@ -13,9 +13,10 @@ message GroupConfig {
   google.protobuf.BoolValue anonymousChat = 6;
 }
 
-message GroupMemberSimpleInfo {
-  google.protobuf.StringValue name = 1;
-  google.protobuf.StringValue specialTitle = 2;
+message GroupMemberInfo {
+  google.protobuf.StringValue nick = 1;
+  google.protobuf.StringValue nameCard = 2;
+  google.protobuf.StringValue specialTitle = 3;
 }
 
 message GroupInfo {
@@ -24,7 +25,7 @@ message GroupInfo {
   GroupPermission permission = 3;
 }
 
-message GroupMemberInfo {
+message GroupMemberDetails {
   int64 id = 1;
   string nick = 2;
   string nameCard = 3;

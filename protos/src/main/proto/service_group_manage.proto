@@ -6,23 +6,23 @@ import "group.proto";
 package com.amemachif.abot.proto;
 
 service GroupManageService {
-  rpc mute (MuteRequest) returns (CommonResponse) {}
-  rpc unmute (UnmuteRequest) returns (CommonResponse) {}
-  rpc kick (KickRequest) returns (CommonResponse) {}
-  rpc quit (QuitRequest) returns (CommonResponse) {}
-  rpc muteAll (MuteUnmuteAllRequest) returns (CommonResponse) {}
-  rpc unmuteAll (MuteUnmuteAllRequest) returns (CommonResponse) {}
+  rpc mute (MuteRequest) returns (CommonEmptyResponse) {}
+  rpc unmute (UnmuteRequest) returns (CommonEmptyResponse) {}
+  rpc kick (KickRequest) returns (CommonEmptyResponse) {}
+  rpc quit (QuitRequest) returns (CommonEmptyResponse) {}
+  rpc muteAll (MuteUnmuteAllRequest) returns (CommonEmptyResponse) {}
+  rpc unmuteAll (MuteUnmuteAllRequest) returns (CommonEmptyResponse) {}
   rpc getGroupConfig (GetGroupConfigRequest) returns (GetGroupConfigResponse) {}
-  rpc setGroupConfig (SetGroupConfigRequest) returns (CommonResponse) {}
+  rpc setGroupConfig (SetGroupConfigRequest) returns (CommonEmptyResponse) {}
   rpc getMemberInfo (GetMemberInfoRequest) returns (GetMemberInfoResponse) {}
-  rpc setMemberInfo (SetMemberInfoRequest) returns (CommonResponse) {}
+  rpc setMemberInfo (SetMemberInfoRequest) returns (CommonEmptyResponse) {}
 }
 
 message MuteRequest {
   SessionKey sessionKey = 1;
   int64 target = 2;
   int64 memberId = 3;
-  int32 time = 4;
+  google.protobuf.Timestamp time = 4;
 }
 
 message UnmuteRequest {
@@ -35,7 +35,7 @@ message KickRequest {
   SessionKey sessionKey = 1;
   int64 target = 2;
   int64 memberId = 3;
-  google.protobuf.StringValue msg = 4;
+  string msg = 4;
 }
 
 message QuitRequest {
@@ -61,7 +61,7 @@ message GetGroupConfigResponse {
 message SetGroupConfigRequest {
   SessionKey sessionKey = 1;
   int64 target = 2;
-  GroupConfig config = 3;
+  GroupConfig data = 3;
 }
 
 message GetMemberInfoRequest {
@@ -72,12 +72,12 @@ message GetMemberInfoRequest {
 
 message GetMemberInfoResponse {
   ErrorMessage code = 1;
-  GroupMemberSimpleInfo data = 2;
+  GroupMemberInfo data = 2;
 }
 
 message SetMemberInfoRequest {
   SessionKey sessionKey = 1;
   int64 target = 2;
   int64 memberId = 3;
-  GroupMemberSimpleInfo info = 4;
+  GroupMemberInfo data = 4;
 }

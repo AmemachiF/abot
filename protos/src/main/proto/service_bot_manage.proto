@@ -5,21 +5,24 @@ import "common.proto";
 package com.amemachif.abot.proto;
 
 service BotManageService {
-  rpc newBot (NewBotRequest) returns (CommonResponse) {}
+  rpc newBot (NewBotRequest) returns (CommonEmptyResponse) {}
   rpc botStatus (BotStatusRequest) returns (BotStatusResponse) {}
   rpc botList (BotListRequest) returns (BotListResponse) {}
-  rpc login (LoginRequest) returns (CommonResponse) {}
+  rpc login (LoginRequest) returns (CommonEmptyResponse) {}
 }
 
 message NewBotRequest {
-    string manageKey = 1;
-    int64 qq = 2;
-    oneof password {
-      string passwordPlain = 3;
-      bytes passwordMd5 = 4;
-    }
-    bool autoLogin = 5;
-    BotConfig config = 6;
+  string manageKey = 1;
+  int64 qq = 2;
+  oneof password {
+    string passwordPlain = 3;
+    bytes passwordMd5 = 4;
+  }
+  bool autoLogin = 5;
+  BotConfig config = 6;
+  message BotConfig {
+    google.protobuf.StringValue deviceInfo = 1;
+  }
 }
 
 message BotStatusRequest {
@@ -30,15 +33,10 @@ message BotStatusRequest {
 message BotStatusResponse {
   ErrorMessage code = 1;
   BotStatus status = 2;
-}
-
-message BotStatus {
-  int64 qq = 1;
-  bool isOnline = 2;
-}
-
-message BotConfig {
-  google.protobuf.StringValue deviceInfo = 1;
+  message BotStatus {
+    int64 qq = 1;
+    bool isOnline = 2;
+  }
 }
 
 message BotListRequest {
@@ -48,11 +46,10 @@ message BotListRequest {
 message BotListResponse {
   ErrorMessage code = 1;
   repeated BotInfo bots = 2;
-}
-
-message BotInfo {
-  int64 qq = 1;
-  google.protobuf.StringValue nickname = 2;
+  message BotInfo {
+    int64 qq = 1;
+    string nickname = 2;
+  }
 }
 
 message LoginRequest {

@@ -4,13 +4,15 @@ import public "error.proto";
 import public "session.proto";
 import public "user_info.proto";
 import public "group.proto";
+import public "message_chain.proto";
 import public "message_event.proto";
 import public "google/protobuf/empty.proto";
 import public "google/protobuf/wrappers.proto";
 import public "google/protobuf/any.proto";
+import public "google/protobuf/timestamp.proto";
 
 package com.amemachif.abot.proto;
 
-message CommonResponse {
+message CommonEmptyResponse {
   ErrorMessage code = 1;
 }

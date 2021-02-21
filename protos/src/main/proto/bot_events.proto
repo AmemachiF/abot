@@ -1,0 +1,183 @@
+syntax = "proto3";
+
+import "user_info.proto";
+import "group.proto";
+import "message_chain.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package com.amemachif.abot.proto;
+
+message BotOnlineEvent {
+  int64 qq = 1;
+}
+
+message BotOfflineEventActive {
+  int64 qq = 1;
+}
+
+message BotOfflineEventForce {
+  int64 qq = 1;
+}
+
+message BotOfflineEventDropped {
+  int64 qq = 1;
+}
+
+message BotReLoginEvent {
+  int64 qq = 1;
+}
+
+message BotGroupPermissionChangeEvent {
+  GroupPermission origin = 1;
+  GroupPermission current = 2;
+  GroupInfo group = 3;
+}
+
+message BotMuteEvent {
+  google.protobuf.Timestamp duration = 1;
+  GroupMemberDetails operator = 2;
+}
+
+message BotUnmuteEvent {
+  GroupMemberDetails operator = 1;
+}
+
+message BotJoinGroupEvent {
+  GroupInfo group = 1;
+}
+
+message BotLeaveEventActive {
+  GroupInfo group = 1;
+}
+
+message BotLeaveEventKick {
+  GroupInfo group = 1;
+}
+
+message GroupRecallEvent {
+  int64 authorId = 1;
+  int32 messageId = 2;
+  google.protobuf.Timestamp time = 3;
+  GroupInfo group = 4;
+  GroupMemberDetails operator = 5;
+}
+
+message FriendRecallEvent {
+  int64 authorId = 1;
+  int32 messageId = 2;
+  google.protobuf.Timestamp time = 3;
+  int64 operator = 4;
+}
+
+message GroupNameChangeEvent {
+  string origin = 1;
+  string current = 2;
+  GroupInfo group = 3;
+  GroupMemberDetails operator = 4;
+}
+
+message GroupEntranceAnnouncementChangeEvent {
+  string origin = 1;
+  string current = 2;
+  GroupInfo group = 3;
+  GroupMemberDetails operator = 4;
+}
+
+message GroupMuteAllEvent {
+  bool origin = 1;
+  bool current = 2;
+  GroupInfo group = 3;
+  GroupMemberDetails operator = 4;
+}
+
+message GroupAllowAnonymousChatEvent {
+  bool origin = 1;
+  bool current = 2;
+  GroupInfo group = 3;
+  GroupMemberDetails operator = 4;
+}
+
+message GroupAllowConfessTalkEvent {
+  bool origin = 1;
+  bool current = 2;
+  GroupInfo group = 3;
+  bool isByBot = 4;
+}
+
+message GroupAllowMemberInviteEvent {
+  bool origin = 1;
+  bool current = 2;
+  GroupInfo group = 3;
+  GroupMemberDetails operator = 4;
+}
+
+message MemberJoinEvent {
+  GroupMemberDetails member = 1;
+}
+
+message MemberLeaveEventKick {
+  GroupMemberDetails member = 1;
+  GroupMemberDetails operator = 2;
+}
+
+message MemberLeaveEventQuit {
+  GroupMemberDetails member = 1;
+}
+
+message MemberCardChangeEvent {
+  string origin = 1;
+  string current = 2;
+  GroupMemberDetails member = 3;
+  GroupMemberDetails operator = 4;
+}
+
+message MemberSpecialTitleChangeEvent {
+  string origin = 1;
+  string current = 2;
+  GroupMemberDetails member = 3;
+}
+
+message MemberPermissionChangeEvent {
+  GroupPermission origin = 1;
+  GroupPermission current = 2;
+  GroupMemberDetails member = 3;
+}
+
+message MemberMuteEvent {
+  google.protobuf.Timestamp duration = 1;
+  GroupMemberDetails member = 2;
+  GroupMemberDetails operator = 3;
+}
+
+message MemberUnmuteEvent {
+  GroupMemberDetails member = 1;
+  GroupMemberDetails operator = 2;
+}
+
+message NewFriendRequestEvent {
+  int64 eventId = 1;
+  int64 fromId = 2;
+  int64 groupId = 3;
+  string nick = 4;
+  string nameCard = 5;
+  string message = 6;
+}
+
+message MemberJoinRequestEvent {
+  int64 eventId = 1;
+  int64 fromId = 2;
+  int64 groupId = 3;
+  string groupName = 4;
+  string nick = 5;
+  string message = 6;
+}
+
+message BotInvitedJoinGroupRequestEvent {
+  int64 eventId = 1;
+  int64 fromId = 2;
+  int64 groupId = 3;
+  string groupName = 4;
+  string nick = 5;
+  string message = 6;
+}

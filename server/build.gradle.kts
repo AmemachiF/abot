@@ -17,6 +17,12 @@ dependencies {
     runtimeOnly("io.grpc:grpc-netty:${rootProject.ext["grpcVersion"]}")
 }
 
+kotlin {
+    sourceSets.all {
+        languageSettings.useExperimentalAnnotation("kotlin.Experimental")
+    }
+}
+
 val createVersionProperties = task("createVersionProperties") {
     doLast {
         file("$buildDir/resources/main").apply {

@@ -2,33 +2,104 @@ syntax = "proto3";
 
 import "user_info.proto";
 import "group.proto";
+import "message_chain.proto";
+import "bot_events.proto";
 
 package com.amemachif.abot.proto;
 
 message MessageEventInfo {
-  string type = 1;
-  MessageEvent message = 2;
-}
-
-message MessageEvent {
-  oneof message_content {
-    FriendMessageContent friendMessage = 2;
-    GroupMessageContent groupMessage = 3;
-    TempMessageContent tempMessage = 4;
+  oneof message_event {
+    FriendMessageContent friendMessage = 1;
+    GroupMessageContent groupMessage = 2;
+    TempMessageContent tempMessage = 3;
   }
 }
 
+message EventInfo {
+  oneof event {
+    FriendMessageContent friendMessage = 1;
+    GroupMessageContent groupMessage = 2;
+    TempMessageContent tempMessage = 3;
+    BotOnlineEvent botOnlineEvent = 4;
+    BotOfflineEventActive botOfflineEventActive = 5;
+    BotOfflineEventForce botOfflineEventForce = 6;
+    BotOfflineEventDropped botOfflineEventDropped = 7;
+    BotReLoginEvent botReLoginEvent = 8;
+    BotGroupPermissionChangeEvent botGroupPermissionChangeEvent = 9;
+    BotMuteEvent botMuteEvent = 10;
+    BotUnmuteEvent botUnmuteEvent = 11;
+    BotJoinGroupEvent botJoinGroupEvent = 12;
+    BotLeaveEventActive botLeaveEventActive = 13;
+    BotLeaveEventKick botLeaveEventKick = 14;
+    GroupRecallEvent groupRecallEvent = 15;
+    FriendRecallEvent friendRecallEvent = 16;
+    GroupNameChangeEvent groupNameChangeEvent = 17;
+    GroupEntranceAnnouncementChangeEvent groupEntranceAnnouncementChangeEvent = 18;
+    GroupMuteAllEvent groupMuteAllEvent = 19;
+    GroupAllowAnonymousChatEvent groupAllowAnonymousChatEvent = 20;
+    GroupAllowConfessTalkEvent groupAllowConfessTalkEvent = 21;
+    GroupAllowMemberInviteEvent groupAllowMemberInviteEvent = 22;
+    MemberJoinEvent memberJoinEvent = 23;
+    MemberLeaveEventKick memberLeaveEventKick = 24;
+    MemberLeaveEventQuit MemberLeaveEventQuit = 25;
+    MemberCardChangeEvent memberCardChangeEvent = 26;
+    MemberSpecialTitleChangeEvent memberSpecialTitleChangeEvent = 27;
+    MemberPermissionChangeEvent memberPermissionChangeEvent = 28;
+    MemberMuteEvent memberMuteEvent = 29;
+    MemberUnmuteEvent memberUnmuteEvent = 30;
+    NewFriendRequestEvent newFriendRequestEvent = 31;
+    MemberJoinRequestEvent memberJoinRequestEvent = 32;
+    BotInvitedJoinGroupRequestEvent BotInvitedJoinGroupRequestEvent = 33;
+  }
+}
+
+enum EventType {
+  FRIEND_MESSAGE_EVENT = 0;
+  GROUP_MESSAGE_CONTENT = 1;
+  TEMP_MESSAGE_CONTENT = 2;
+  BOT_ONLINE_EVENT = 3;
+  BOT_OFFLINE_EVENT_ACTIVE = 4;
+  BOT_OFFLINE_EVENT_FORCE = 5;
+  BOT_OFFLICE_EVENT_DROPPED = 6;
+  BOT_RELOGIN_EVENT = 7;
+  BOT_GROUP_PERMISSION_CHANGE_EVENT = 8;
+  BOT_MUTE_EVENT = 9;
+  BOT_UNMUTE_EVENT = 10;
+  BOT_JOIN_GROUP_EVENT = 11;
+  BOT_LEAVE_EVENT_ACTIVE = 12;
+  BOT_LEAVE_EVENT_KICK = 13;
+  GROUP_RECALL_EVENT = 14;
+  FRIEND_RECALL_EVENT = 15;
+  GROUP_NAME_CHANGE_EVENT = 16;
+  GROUP_ENTRANCE_ANNOUNCEMENT_CHANGE_EVENT = 17;
+  GROUP_MUTE_ALL_EVENT = 18;
+  GROUP_ALLOW_ANONYMOUS_EVENT = 19;
+  GROUP_ALLOW_CONFESS_TALK_EVENT = 20;
+  GROUP_ALLOW_MEMBER_INVITE_EVENT = 21;
+  MEMBER_JOIN_EVENT = 22;
+  MEMBER_LEAVE_EVENT_KICK = 23;
+  MEMBER_LEAVE_EVENT_QUIT = 24;
+  MEMBER_CARD_CHANGE_EVENT = 25;
+  MEMBER_SPECIAL_TITLE_CHANGE_EVENT = 26;
+  MEMBER_PERMISSION_CHANGE_EVENT = 27;
+  MEMBER_MUTE_EVENT = 28;
+  MEMBER_UNMUTE_EVENT = 29;
+  NEW_FRIEND_REQUEST_EVENT = 30;
+  MEMBER_JOIN_REQUEST_EVENT = 31;
+  BOT_INVITED_JOIN_GROUP_REQUEST_EVENT = 32;
+}
+
 message GroupMessageContent {
-  reserved "messageChain";
-  GroupMemberInfo sender = 2;
+  MessageChain messageChain = 1;
+  GroupMemberDetails sender = 2;
 }
 
 message FriendMessageContent {
-  reserved "messageChain";
+  MessageChain messageChain = 1;
   FriendInfo sender = 2;
 }
 
 message TempMessageContent {
-  reserved "messageChain";
+  MessageChain messageChain = 1;
   FriendInfo sender = 2;
 }

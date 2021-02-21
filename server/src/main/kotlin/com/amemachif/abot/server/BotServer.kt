@@ -1,8 +1,6 @@
 package com.amemachif.abot.server
 
-import com.amemachif.abot.server.services.BotManageService
-import com.amemachif.abot.server.services.BotRootService
-import com.amemachif.abot.server.services.ListService
+import com.amemachif.abot.server.services.*
 import io.grpc.Server
 import io.grpc.ServerBuilder
 
@@ -11,7 +9,11 @@ class BotServer(private val port: Int) {
         .forPort(port)
         .addService(BotManageService())
         .addService(BotRootService())
+        .addService(SessionConfigService())
         .addService(ListService())
+        .addService(GroupManageService())
+        .addService(SendMessageService())
+        .addService(ReceiveMessageService())
         .build()
 
     fun start() {

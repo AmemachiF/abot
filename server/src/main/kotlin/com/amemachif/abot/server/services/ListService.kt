@@ -6,10 +6,9 @@ import com.amemachif.abot.proto.ServiceFriendGroupList
 import com.amemachif.abot.server.SessionManager
 import com.amemachif.abot.server.botCatching
 import com.amemachif.abot.server.exceptions.TargetNotFoundException
-import net.mamoe.mirai.contact.nameCardOrNick
 
 class ListService : ListServiceGrpcKt.ListServiceCoroutineImplBase() {
-    override suspend fun friendList(request: ServiceFriendGroupList.FriendGroupListRequest): ServiceFriendGroupList.FriendListResponse {
+    override suspend fun friendList(request: ServiceFriendGroupList.FriendListRequest): ServiceFriendGroupList.FriendListResponse {
         return botCatching {
             val session = SessionManager.checkSession(request.sessionKey)
             val bot = session.ensuredBind().bot
@@ -27,7 +26,7 @@ class ListService : ListServiceGrpcKt.ListServiceCoroutineImplBase() {
         }
     }
 
-    override suspend fun groupList(request: ServiceFriendGroupList.FriendGroupListRequest): ServiceFriendGroupList.GroupListResponse {
+    override suspend fun groupList(request: ServiceFriendGroupList.GroupListRequest): ServiceFriendGroupList.GroupListResponse {
         return botCatching {
             val bot = SessionManager.checkSession(request.sessionKey).ensuredBind().bot
             ServiceFriendGroupList.GroupListResponse.newBuilder()
